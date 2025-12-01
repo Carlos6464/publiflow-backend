@@ -1,0 +1,48 @@
+services:
+  api_publiflow:
+    container_name: api_publiflow
+    build: .
+    ports:
+      - '3333:3333'
+    env_file:
+      - ./.env
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    depends_on:
+      - db_publiflow
+    command: sh -c "sleep 5 && npx prisma migrate dev && npx prisma db seed && npm run dev"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - uploads_data:/app/uploads
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pg_admin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '8080:80'
+    depends_on:
+      - db_publiflow
+
+  db_publiflow:
+    container_name: postgres
+    image: postgres:15-alpine
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+    driver: local
+  uploads_data:
+    driver: local

@@ -1,0 +1,39 @@
+services:
+  # Serviço para o banco de dados de teste
+  db_test:
+    image: postgres:15-alpine
+    container_name: postgres_test
+    restart: always
+    env_file:
+      - .env.test
+    environment:
+      # Agora, estas variáveis virão do arquivo .env.test
+      POSTGRES_USER: ${POSTGRES_USER_TEST}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD_TEST}
+      POSTGRES_DB: ${POSTGRES_DB_TEST}
+    ports:
+      - '5433:5432'
+    volumes:
+      - /var/lib/postgresql/data
+
+  # Serviço para a API que vai rodar os testes
+  api_test:
+    build: .
+    container_name: api_publiflow_test
+    depends_on:
+      - db_test
+    env_file:
+      - .env.test
+    command: >
+      sh -c "
+        echo 'Aguardando o banco de dados de teste iniciar...' &&
+        sleep 5 &&
+        echo 'Aplicando migrations no banco de teste...' &&
+        npx prisma migrate deploy &&
+        echo 'Executando testes...' &&
+        npm test
+      "
+    volumes:
+      - ./:/app
+      - /app/node_modules
+
