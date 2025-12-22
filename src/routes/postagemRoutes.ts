@@ -120,8 +120,8 @@ const upload = multer(multerConfig);
  *       400:
  *         description: Termo de busca não fornecido ou inválido
  */
-router.get('/posts', authMiddleware(['Professor']), PostagemController.getAll);
-router.get('/posts/me', authMiddleware(['Professor']), PostagemController.getMyPosts);
+router.get('/posts', authMiddleware(['Professor', 'Aluno']), PostagemController.getAll);
+router.get('/posts/me', authMiddleware(['Professor', 'Aluno']), PostagemController.getMyPosts);
 router.post('/posts', authMiddleware(['Professor']), upload.single('imagem'), PostagemController.create);
 router.get('/posts/feed', authMiddleware(['Professor', 'Aluno']), PostagemController.getFeed);
 router.get('/posts/search', authMiddleware(['Professor', 'Aluno']), PostagemController.search);
@@ -209,7 +209,7 @@ router.get('/posts/search', authMiddleware(['Professor', 'Aluno']), PostagemCont
  *       404:
  *         description: Postagem não encontrada
  */
-router.get('/posts/:id', authMiddleware(['Professor']), PostagemController.getById);
+router.get('/posts/:id', authMiddleware(['Professor', 'Aluno']), PostagemController.getById);
 router.put('/posts/:id', authMiddleware(['Professor']), upload.single('imagem'), PostagemController.update);
 router.delete('/posts/:id', authMiddleware(['Professor']), PostagemController.delete);
 
