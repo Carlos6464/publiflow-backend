@@ -54,6 +54,21 @@ class UsuarioService {
   }
 
   /**
+   * Função para listar todos os usuários de um determinado tipo
+   * @param type
+   * @returns
+   */
+  public async getAllUsersType(type: string): Promise<Omit<PF_usuario, 'senha'>[]> {
+    const users = await prisma.pF_usuario.findMany({
+      where: { papelUsuarioID: parseInt(type) },
+    });
+    return users.map(user => {
+      const {senha, ...userWithoutPassword} = user;
+      return userWithoutPassword;
+    });
+  }
+
+  /**
    * Função para BUSCAR um usuário pelo ID
    * @param id
    * @returns

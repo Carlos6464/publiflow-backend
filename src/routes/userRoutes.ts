@@ -45,6 +45,31 @@ router.post('/users', UsuarioController.create);
 
 /**
  * @swagger
+ * /users/{type}:
+ *   get:
+ *     summary: Lista todos os usuários de um determinado tipo
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: type
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Tipo do usuário
+ *     responses:
+ *       200:
+ *         description: Lista de usuários
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Usuario'
+ */
+router.get('/users/type/:type', UsuarioController.getAllUsersType);
+
+/**
+ * @swagger
  * /users/{id}:
  *   get:
  *     summary: Busca um usuário pelo ID

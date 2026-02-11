@@ -19,6 +19,10 @@ class PostagemController {
     try {
       const { titulo, descricao, visibilidade } = req.body;
 
+      console.log('====================================');
+      console.log(req.body);
+      console.log('====================================');
+
       // Pega o nome do arquivo salvo pelo multer
       const nomeDoArquivo = req.file?.filename;
 

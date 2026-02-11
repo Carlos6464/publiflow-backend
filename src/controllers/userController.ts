@@ -31,6 +31,21 @@ class UsuarioController {
   }
 
   /**
+   * Função para listar todos os usuários de um determinado tipo
+   * @param req 
+   * @param res 
+   */
+  public async getAllUsersType(req: Request, res: Response) {
+    try {
+      const { type } = req.params as { type: string };
+      const users = await UsuarioService.getAllUsersType(type);
+      res.status(200).json(users);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+
+  /**
    * Função para buscar um usuário pelo ID
    * @param req 
    * @param res 
